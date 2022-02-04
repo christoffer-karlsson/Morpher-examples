@@ -3,48 +3,46 @@
 static mtConsole g_console;
 mtConsole *console = &g_console;
 
-// [SECTION] CVar
-
-struct mtCVar
+struct mtCVAR
 {
 	virtual void SetDefault() = 0;
-	virtual bool Set( const mtStr &src ) = 0;
+	virtual bool Set(const mtStr &src) = 0;
 	virtual mtStr GetDefault() = 0;
 	virtual mtStr GetValue() = 0;
 	virtual mtStr GetMin() = 0;
 	virtual mtStr GetMax() = 0;
 };
 
-struct mtCVar_BOOL : public mtCVar
+struct mtCVar_BOOL : public mtCVAR
 {
 	bool *const src;
 	const bool def;
 
-	mtCVar_BOOL( bool *src, bool def ) : src( src ), def( def ) {};
+	mtCVar_BOOL(bool *src, bool def) : src(src), def(def) {};
 
 	void SetDefault() override
 	{
 		*src = def;
 	}
 
-	bool Set( const mtStr &src ) override
+	bool Set(const mtStr &src) override
 	{
-		if( !src.IsNumeric() )
+		if(!src.IsNumeric())
 			return false;
 
-		bool converted_value = std::stoul( src.Data() );
+		bool converted_value = std::stoul(src.Data());
 		*this->src = converted_value;
 		return true;
 	}
 
 	mtStr GetDefault() override
 	{
-		return std::to_string( def ).c_str();
+		return std::to_string(def).c_str();
 	}
 
 	mtStr GetValue() override
 	{
-		return std::to_string( *src ).c_str();
+		return std::to_string(*src).c_str();
 	}
 
 	mtStr GetMin() override
@@ -58,7 +56,7 @@ struct mtCVar_BOOL : public mtCVar
 	}
 };
 
-struct mtCVar_INT32 : public mtCVar
+struct mtCVar_INT32 : public mtCVAR
 {
 	int32 *const src;
 	const int32 def;
@@ -66,21 +64,21 @@ struct mtCVar_INT32 : public mtCVar
 	const int32 max;
 	const bool minmax_defined;
 
-	mtCVar_INT32( int32 *src, int32 def ) :
-		src( src ),
-		def( def ),
-		min( 0 ),
-		max( 0 ),
-		minmax_defined( false )
+	mtCVar_INT32(int32 *src, int32 def) :
+		src(src),
+		def(def),
+		min(0),
+		max(0),
+		minmax_defined(false)
 	{
 	};
 
-	mtCVar_INT32( int32 *src, int32 def, int32 min, int32 max ) :
-		src( src ),
-		def( def ),
-		min( min ),
-		max( max ),
-		minmax_defined( true )
+	mtCVar_INT32(int32 *src, int32 def, int32 min, int32 max) :
+		src(src),
+		def(def),
+		min(min),
+		max(max),
+		minmax_defined(true)
 	{
 	};
 
@@ -89,18 +87,18 @@ struct mtCVar_INT32 : public mtCVar
 		*src = def;
 	}
 
-	bool Set( const mtStr &src ) override
+	bool Set(const mtStr &src) override
 	{
-		if( !src.IsNumeric() )
+		if(!src.IsNumeric())
 			return false;
 
-		int32 converted_value = (int32)std::stoi( src.Data() );
+		int32 converted_value = (int32)std::stoi(src.Data());
 
-		if( minmax_defined )
+		if(minmax_defined)
 		{
-			if( converted_value < min )
+			if(converted_value < min)
 				converted_value = min;
-			if( converted_value > max )
+			if(converted_value > max)
 				converted_value = max;
 		}
 
@@ -111,32 +109,32 @@ struct mtCVar_INT32 : public mtCVar
 
 	mtStr GetDefault() override
 	{
-		return std::to_string( def ).c_str();
+		return std::to_string(def).c_str();
 	}
 
 	mtStr GetValue() override
 	{
-		return std::to_string( *src ).c_str();
+		return std::to_string(*src).c_str();
 	}
 
 	mtStr GetMin() override
 	{
-		if( !minmax_defined )
+		if(!minmax_defined)
 			return "not_defined";
 
-		return std::to_string( min ).c_str();
+		return std::to_string(min).c_str();
 	}
 
 	mtStr GetMax() override
 	{
-		if( !minmax_defined )
+		if(!minmax_defined)
 			return "not_defined";
 
-		return std::to_string( max ).c_str();
+		return std::to_string(max).c_str();
 	}
 };
 
-struct mtCVar_UINT32 : public mtCVar
+struct mtCVar_UINT32 : public mtCVAR
 {
 	uint32 *const src;
 	const uint32 def;
@@ -144,21 +142,21 @@ struct mtCVar_UINT32 : public mtCVar
 	const uint32 max;
 	const bool minmax_defined;
 
-	mtCVar_UINT32( uint32 *src, uint32 def ) :
-		src( src ),
-		def( def ),
-		min( 0 ),
-		max( 0 ),
-		minmax_defined( false )
+	mtCVar_UINT32(uint32 *src, uint32 def) :
+		src(src),
+		def(def),
+		min(0),
+		max(0),
+		minmax_defined(false)
 	{
 	};
 
-	mtCVar_UINT32( uint32 *src, uint32 def, uint32 min, uint32 max ) :
-		src( src ),
-		def( def ),
-		min( min ),
-		max( max ),
-		minmax_defined( true )
+	mtCVar_UINT32(uint32 *src, uint32 def, uint32 min, uint32 max) :
+		src(src),
+		def(def),
+		min(min),
+		max(max),
+		minmax_defined(true)
 	{
 	};
 
@@ -167,18 +165,18 @@ struct mtCVar_UINT32 : public mtCVar
 		*src = def;
 	}
 
-	bool Set( const mtStr &src ) override
+	bool Set(const mtStr &src) override
 	{
-		if( !src.IsNumeric() )
+		if(!src.IsNumeric())
 			return false;
 
-		uint32 converted_value = (uint32)std::stoul( src.Data() );
+		uint32 converted_value = (uint32)std::stoul(src.Data());
 
-		if( minmax_defined )
+		if(minmax_defined)
 		{
-			if( converted_value < min )
+			if(converted_value < min)
 				converted_value = min;
-			if( converted_value > max )
+			if(converted_value > max)
 				converted_value = max;
 		}
 
@@ -189,32 +187,32 @@ struct mtCVar_UINT32 : public mtCVar
 
 	mtStr GetDefault() override
 	{
-		return std::to_string( def ).c_str();
+		return std::to_string(def).c_str();
 	}
 
 	mtStr GetValue() override
 	{
-		return std::to_string( *src ).c_str();
+		return std::to_string(*src).c_str();
 	}
 
 	mtStr GetMin() override
 	{
-		if( !minmax_defined )
+		if(!minmax_defined)
 			return "not_defined";
 
-		return std::to_string( min ).c_str();
+		return std::to_string(min).c_str();
 	}
 
 	mtStr GetMax() override
 	{
-		if( !minmax_defined )
+		if(!minmax_defined)
 			return "not_defined";
 
-		return std::to_string( max ).c_str();
+		return std::to_string(max).c_str();
 	}
 };
 
-struct mtCVar_FLOAT : public mtCVar
+struct mtCVar_FLOAT : public mtCVAR
 {
 	float *const src;
 	const float def;
@@ -222,21 +220,21 @@ struct mtCVar_FLOAT : public mtCVar
 	const float max;
 	const bool minmax_defined;
 
-	mtCVar_FLOAT( float *src, float def ) :
-		src( src ),
-		def( def ),
-		min( 0 ),
-		max( 0 ),
-		minmax_defined( false )
+	mtCVar_FLOAT(float *src, float def) :
+		src(src),
+		def(def),
+		min(0),
+		max(0),
+		minmax_defined(false)
 	{
 	};
 
-	mtCVar_FLOAT( float *src, float def, float min, float max ) :
-		src( src ),
-		def( def ),
-		min( min ),
-		max( max ),
-		minmax_defined( true )
+	mtCVar_FLOAT(float *src, float def, float min, float max) :
+		src(src),
+		def(def),
+		min(min),
+		max(max),
+		minmax_defined(true)
 	{
 	};
 
@@ -245,18 +243,18 @@ struct mtCVar_FLOAT : public mtCVar
 		*src = def;
 	}
 
-	bool Set( const mtStr &src ) override
+	bool Set(const mtStr &src) override
 	{
-		if( !src.IsNumericFloat() )
+		if(!src.IsNumericFloat())
 			return false;
 
-		float converted_value = std::stof( src.Data() );
+		float converted_value = std::stof(src.Data());
 
-		if( minmax_defined )
+		if(minmax_defined)
 		{
-			if( converted_value < min )
+			if(converted_value < min)
 				converted_value = min;
-			if( converted_value > max )
+			if(converted_value > max)
 				converted_value = max;
 		}
 
@@ -267,32 +265,37 @@ struct mtCVar_FLOAT : public mtCVar
 
 	mtStr GetDefault() override
 	{
-		return std::to_string( def ).c_str();
+		return std::to_string(def).c_str();
 	}
 
 	mtStr GetValue() override
 	{
-		return std::to_string( *src ).c_str();
+		return std::to_string(*src).c_str();
 	}
 
 	mtStr GetMin() override
 	{
-		if( !minmax_defined )
+		if(!minmax_defined)
 			return "not_defined";
 
-		return std::to_string( min ).c_str();
+		return std::to_string(min).c_str();
 	}
 
 	mtStr GetMax() override
 	{
-		if( !minmax_defined )
+		if(!minmax_defined)
 			return "not_defined";
 
-		return std::to_string( max ).c_str();
+		return std::to_string(max).c_str();
 	}
 };
 
-void mtConsole::Command( mtStr input )
+mtConsole::mtConsole() :
+	alloc_message(mtConfig::MAX_CONSOLE_MESSAGE_COUNT),
+	list_message(mtConfig::MAX_CONSOLE_MESSAGE_COUNT)
+{}
+
+void mtConsole::Command(mtStr input)
 {
 	input.ToLower();
 
@@ -301,167 +304,218 @@ void mtConsole::Command( mtStr input )
 
 	bool space_found = false;
 
-	for( int i = 0; i < input.Length(); i++ )
+	for(int i = 0; i < input.Length(); i++)
 	{
-		if( input[i] == ' ' )
+		if(input[i] == ' ')
 			space_found = true;
 
-		if( !space_found )
+		if(!space_found)
 			command += input[i];
 		else
 			value += input[i];
 	}
 
 	// List all the possible cvar's.
-	if( command.Find( "cvarlist" ) )
+	if(command.Find("cvarlist"))
 	{
-		for( auto &e : registeredCVarMap )
+		for(auto &e : cvar_map)
 		{
-			mtCVar *cvar = e.second;
-			console->Message( e.first + " [ Value: " + cvar->GetValue() + " ] [ Default: " + cvar->GetDefault() + " ] [ Min: " + cvar->GetMin() + " ] [ Max: " + cvar->GetMax() + " ]" );
+			mtCVAR *cvar = e.second;
+			console->Message(e.first + " [ Value: " + cvar->GetValue() + " ] [ Default: " + cvar->GetDefault() + " ] [ Min: " + cvar->GetMin() + " ] [ Max: " + cvar->GetMax() + " ]");
 		}
 		return;
 	}
 
-	auto find = registeredCVarMap.find( command );
+	auto find = cvar_map.find(command);
 
-	if( find != registeredCVarMap.end() )
+	if(find != cvar_map.end())
 	{
-		mtCVar *cvar = find->second;
+		mtCVAR *cvar = find->second;
 
-		value.FindAndRemoveAll( " " );
+		value.FindAndRemoveAll(" ");
 
 		// If no value was given, then just print the command and all its related info.
-		if( value.IsEmpty() )
+		if(value.IsEmpty())
 		{
-			console->Message( command + " [ Value: " + cvar->GetValue() + " ] [ Default: " + cvar->GetDefault() + " ] [ Min: " + cvar->GetMin() + " ] [ Max: " + cvar->GetMax() + " ]" );
+			console->Message(command + " [ Value: " + cvar->GetValue() + " ] [ Default: " + cvar->GetDefault() + " ] [ Min: " + cvar->GetMin() + " ] [ Max: " + cvar->GetMax() + " ]");
 			return;
 		}
 
 		// If value is "def", then set the default value of the cvar.
-		if( value.Find( "def" ) )
+		if(value.Find("def"))
 		{
 			cvar->SetDefault();
-			console->Success( command + " is set to default value: " + cvar->GetValue() );
+			console->Success(command + " is set to default value: " + cvar->GetValue());
 			return;
 		}
 
-		if( !cvar->Set( value ) )
+		if(!cvar->Set(value))
 		{
-			console->Message( mtStr( "Unacceptable value: " ) + value );
+			console->Message(mtStr("Unacceptable value: ") + value);
 			return;
 		}
 
-		console->Success( command + " is set to: " + cvar->GetValue() );
+		console->Success(command + " is set to: " + cvar->GetValue());
 	}
 	else
 	{
-		console->Message( mtStr( "Unknown command: " ) + command );
+		console->Message(mtStr("Unknown command: ") + command);
 	}
 }
 
-void mtConsole::RegisterCVar_BOOL( mtStr command, bool *src, bool def )
+void mtConsole::RegisterCVar_BOOL(const mtStr &command, bool *src, bool def)
 {
-	registeredCVarMap.emplace( command, new mtCVar_BOOL( src, def ) );
+	cvar_map.emplace(command, new mtCVar_BOOL(src, def));
 }
 
-void mtConsole::RegisterCVar_INT32( mtStr command, int32 *src, int32 def )
+void mtConsole::RegisterCVar_INT32(const mtStr &command, int32 *src, int32 def)
 {
-	registeredCVarMap.emplace( command, new mtCVar_INT32( src, def ) );
+	cvar_map.emplace(command, new mtCVar_INT32(src, def));
 }
 
-void mtConsole::RegisterCVar_INT32( mtStr command, int32 *src, int32 def, int32 min, int32 max )
+void mtConsole::RegisterCVar_INT32(const mtStr &command, int32 *src, int32 def, int32 min, int32 max)
 {
-	registeredCVarMap.emplace( command, new mtCVar_INT32( src, def, min, max ) );
+	cvar_map.emplace(command, new mtCVar_INT32(src, def, min, max));
 }
 
-void mtConsole::RegisterCVar_UINT32( mtStr command, uint32 *src, uint32 def )
+void mtConsole::RegisterCVar_UINT32(const mtStr &command, uint32 *src, uint32 def)
 {
-	registeredCVarMap.emplace( command, new mtCVar_UINT32( src, def ) );
+	cvar_map.emplace(command, new mtCVar_UINT32(src, def));
 }
 
-void mtConsole::RegisterCVar_UINT32( mtStr command, uint32 *src, uint32 def, uint32 min, uint32 max )
+void mtConsole::RegisterCVar_UINT32(const mtStr &command, uint32 *src, uint32 def, uint32 min, uint32 max)
 {
-	registeredCVarMap.emplace( command, new mtCVar_UINT32( src, def, min, max ) );
+	cvar_map.emplace(command, new mtCVar_UINT32(src, def, min, max));
 }
 
-void mtConsole::RegisterCVar_FLOAT( mtStr command, float *src, float def )
+void mtConsole::RegisterCVar_FLOAT(const mtStr &command, float *src, float def)
 {
-	registeredCVarMap.emplace( command, new mtCVar_FLOAT( src, def ) );
+	cvar_map.emplace(command, new mtCVar_FLOAT(src, def));
 }
 
-void mtConsole::RegisterCVar_FLOAT( mtStr command, float *src, float def, float min, float max )
+void mtConsole::RegisterCVar_FLOAT(const mtStr &command, float *src, float def, float min, float max)
 {
-	registeredCVarMap.emplace( command, new mtCVar_FLOAT( src, def, min, max ) );
+	cvar_map.emplace(command, new mtCVar_FLOAT(src, def, min, max));
 }
 
-void mtConsole::Message( mtStr text )
+void mtConsole::Message(const mtStr &text, uint32 color_hex)
 {
-	mtCMsg message;
-	message.text = text;
-	message.color_hex = 0xFFFFFFFF;
-	messageList.push_back( message );
+	if(list_message.Count() >= mtConfig::MAX_CONSOLE_MESSAGE_COUNT)
+	{
+		Overflow(text, color_hex);
+		return;
+	}
+
+	mtCVARMessage *message = alloc_message.Get();
+	message->text.Edit(text.Data());
+	message->color_hex = color_hex;
+
+	list_message.Append(message);
 }
 
-void mtConsole::Message( mtStr text, uint32 color_hex )
+void mtConsole::Message(const mtStr &text)
 {
-	mtCMsg message;
-	message.text = text;
-	message.color_hex = color_hex;
-	messageList.push_back( message );
+	Message(text, 0xFFFFFFFF);
 }
 
-void mtConsole::Error( mtStr text )
+void mtConsole::Success(const mtStr &text)
 {
-	Message( text, mtColor::HEX_RED );
+	Message(text, mtColor::HEX_GREEN);
 }
 
-void mtConsole::Success( mtStr text )
+void mtConsole::Warning(const mtStr &text)
 {
-	Message( text, mtColor::HEX_GREEN );
+	Message(text, mtColor::HEX_YELLOW);
 }
 
-void mtConsole::Warning( mtStr text )
+void mtConsole::Error(const mtStr &text)
 {
-	Message( text, mtColor::HEX_YELLOW );
+	Message(text, mtColor::HEX_RED);
+}
+
+void mtConsole::Overflow(const mtStr &text, uint32 color_hex)
+{
+	// How many messages that should be saved before flushing.
+	const int saved = 5;
+
+	int begin = list_message.Count() - saved;
+
+	mtCVARMessage temp[saved];
+
+	int j = 0;
+	for(int i = begin; i < list_message.Count(); i++)
+		temp[j++] = *list_message[i];
+
+	Clear();
+
+	for(int j = 0; j < saved; j++)
+		Message(temp[j].text, temp[j].color_hex);
+
+	Message(text, color_hex);
 }
 
 void mtConsole::Clear()
 {
-	messageList.clear();
+	// Return all the pointers to the allocator.
+	for(int i = 0; i < list_message.Count(); i++)
+		alloc_message.Return(list_message[i]);
+
+	list_message.Reset();
 }
 
-void mtConsole::StoreCVarList()
+void mtConsole::Save()
 {
-	mtFileOut file( IOMode::plain, true );
-	if( file.Open( L"Data\\cvar.mtcfg" ) )
+	file.Open(mtConfig::FILE_PATH_CVAR, write | discard);
+
+	for(auto &command : console->GetCVarMap())
 	{
-		for( auto &command : console->GetCVarMap() )
-		{
-			mtStr out;
-			out = command.first + " " + command.second->GetValue() + "\n";
-			file.Write( out.Data(), out.Length() );
-		}
+		mtStr out;
+		out = command.first + " " + command.second->GetValue() + "\n";
+		file.Write(out.Data(), out.Length());
 	}
+
+	file.Close();
 }
 
-void mtConsole::RestoreCVarList()
+void mtConsole::Load()
 {
-	mtFileIn file( IOMode::plain );
-	if( file.Open( L"Data\\cvar.mtcfg" ) )
+	file.Open(mtConfig::FILE_PATH_CVAR, read);
+
+	mtStr dest;
+	while(!file.CheckEOF())
 	{
-		std::string dest;
-		while( file.ReadLine( dest ) )
-			console->Command( dest.c_str() );
+		if(file.ReadPeek() == EOF)
+			break;
+
+		dest = file.ReadLine();
+		console->Command(dest);
+
+		if(file.CheckFailBit())
+			break;
 	}
+
+	file.Close();
 }
 
-const std::vector<mtCMsg> &mtConsole::GetMessageList() const
+size_t mtConsole::GetMessageCount() const
 {
-	return messageList;
+	return list_message.Count();
 }
 
-const CVarMap &mtConsole::GetCVarMap() const
+const mtCVARMap &mtConsole::GetCVarMap() const
 {
-	return registeredCVarMap;
+	return cvar_map;
+}
+
+const mtCVARMessage *mtConsole::Iteration(size_t &i) const
+{
+	mtCVARMessage *result = nullptr;
+
+	if(i < list_message.Count())
+	{
+		result = list_message[i];
+		i++;
+	}
+
+	return result;
 }
