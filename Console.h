@@ -1,58 +1,64 @@
 #pragma once
 
-#include "../System/File.h"
 #include "../Graphics/Color.h"
-#include "../MorphtanLib/Str.h"
+#include "../Library/String.h"
+#include "../System/File.h"
 #include <unordered_map>
 #include <vector>
 
 #undef min
 #undef max
 
-struct mtCMsg
+struct mtCVAR;
+
+struct mtCVARMessage
 {
-	mtStr text;
-	uint32 color_hex;
+	mtStr text = mtStr(mtConfig::MAX_CONSOLE_MESSAGE_STRING);
+	uint32 color_hex = 0xFFFFFFFF;
 };
 
-struct mtCVar;
-
-typedef std::unordered_map<mtStr, mtCVar *> CVarMap;
-typedef std::vector<mtCMsg> MsgList;
+typedef std::unordered_map<mtStr, mtCVAR *> mtCVARMap;
 
 class mtConsole
 {
 	public:
 
+	mtConsole();
 	// Check input from user.
-	void Command( mtStr input );
+	void Command(mtStr input);
 	// Register a variable.
-	void RegisterCVar_BOOL( mtStr command, bool *src, bool def );
-	void RegisterCVar_INT32( mtStr command, int32 *src, int32 def );
-	void RegisterCVar_INT32( mtStr command, int32 *src, int32 def, int32 min, int32 max );
-	void RegisterCVar_UINT32( mtStr command, uint32 *src, uint32 def );
-	void RegisterCVar_UINT32( mtStr command, uint32 *src, uint32 def, uint32 min, uint32 max );
-	void RegisterCVar_FLOAT( mtStr command, float *src, float def );
-	void RegisterCVar_FLOAT( mtStr command, float *src, float def, float min, float max );
+	void RegisterCVar_BOOL(const mtStr &command, bool *src, bool def);
+	void RegisterCVar_INT32(const mtStr &command, int32 *src, int32 def);
+	void RegisterCVar_INT32(const mtStr &command, int32 *src, int32 def, int32 min, int32 max);
+	void RegisterCVar_UINT32(const mtStr &command, uint32 *src, uint32 def);
+	void RegisterCVar_UINT32(const mtStr &command, uint32 *src, uint32 def, uint32 min, uint32 max);
+	void RegisterCVar_FLOAT(const mtStr &command, float *src, float def);
+	void RegisterCVar_FLOAT(const mtStr &command, float *src, float def, float min, float max);
 	// Print console message.
-	void Message( mtStr text );
-	void Message( mtStr text, uint32 color_hex );
-	void Error( mtStr text );
-	void Success( mtStr text );
-	void Warning( mtStr text );
+	void Message(const mtStr &text, uint32 color_hex);
+	void Message(const mtStr &text);
+	void Success(const mtStr &text);
+	void Warning(const mtStr &text);
+	void Error(const mtStr &text);
+	// Handle overflow of messages.
+	void Overflow(const mtStr &text, uint32 color_hex);
 	// Clear console messages.
 	void Clear();
 	// Write the CVar map to disk.
-	void StoreCVarList();
+	void Save();
 	// Load the CVar map from disk.
-	void RestoreCVarList();
-	const MsgList &GetMessageList() const;
-	const CVarMap &GetCVarMap() const;
+	void Load();
+
+	size_t GetMessageCount() const;
+	const mtCVARMap &GetCVarMap() const;
+	const mtCVARMessage *Iteration(size_t &i) const;
 
 	private:
 
-	MsgList messageList;
-	CVarMap registeredCVarMap;
+	mtFile file;
+	mtCVARMap cvar_map;
+	mtList<mtCVARMessage *> list_message;
+	mtAllocator<mtCVARMessage> alloc_message;
 };
 
 extern mtConsole *console;
